@@ -5,6 +5,7 @@ go 1.24.4
 require (
 	github.com/shirou/gopsutil/v4 v4.25.6
 	github.com/sirupsen/logrus v1.9.3
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
