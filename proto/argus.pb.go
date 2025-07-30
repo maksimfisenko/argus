@@ -23,8 +23,9 @@ const (
 
 type Snapshot struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Cpu           float64                `protobuf:"fixed64,1,opt,name=cpu,proto3" json:"cpu,omitempty"`
-	Memory        float64                `protobuf:"fixed64,2,opt,name=memory,proto3" json:"memory,omitempty"`
+	AgentId       string                 `protobuf:"bytes,1,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	Cpu           float64                `protobuf:"fixed64,2,opt,name=cpu,proto3" json:"cpu,omitempty"`
+	Memory        float64                `protobuf:"fixed64,3,opt,name=memory,proto3" json:"memory,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -57,6 +58,13 @@ func (x *Snapshot) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Snapshot.ProtoReflect.Descriptor instead.
 func (*Snapshot) Descriptor() ([]byte, []int) {
 	return file_proto_argus_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *Snapshot) GetAgentId() string {
+	if x != nil {
+		return x.AgentId
+	}
+	return ""
 }
 
 func (x *Snapshot) GetCpu() float64 {
@@ -121,10 +129,11 @@ var File_proto_argus_proto protoreflect.FileDescriptor
 
 const file_proto_argus_proto_rawDesc = "" +
 	"\n" +
-	"\x11proto/argus.proto\x12\x05argus\"4\n" +
-	"\bSnapshot\x12\x10\n" +
-	"\x03cpu\x18\x01 \x01(\x01R\x03cpu\x12\x16\n" +
-	"\x06memory\x18\x02 \x01(\x01R\x06memory\"\x1f\n" +
+	"\x11proto/argus.proto\x12\x05argus\"O\n" +
+	"\bSnapshot\x12\x19\n" +
+	"\bagent_id\x18\x01 \x01(\tR\aagentId\x12\x10\n" +
+	"\x03cpu\x18\x02 \x01(\x01R\x03cpu\x12\x16\n" +
+	"\x06memory\x18\x03 \x01(\x01R\x06memory\"\x1f\n" +
 	"\x03Ack\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage2;\n" +
 	"\fArgusService\x12+\n" +

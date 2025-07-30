@@ -10,11 +10,12 @@ import (
 )
 
 type Sender struct {
+	id     string
 	conn   *grpc.ClientConn
 	client proto.ArgusServiceClient
 }
 
-func NewSender(address string) (*Sender, error) {
+func NewSender(address, id string) (*Sender, error) {
 	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
@@ -22,7 +23,7 @@ func NewSender(address string) (*Sender, error) {
 
 	client := proto.NewArgusServiceClient(conn)
 
-	return &Sender{conn: conn, client: client}, nil
+	return &Sender{id: id, conn: conn, client: client}, nil
 }
 
 func (s *Sender) Close() {
@@ -31,8 +32,9 @@ func (s *Sender) Close() {
 
 func (s *Sender) SendSnaphot(ctx context.Context, snap metrics.Snapshot) error {
 	_, err := s.client.SendSnapshot(ctx, &proto.Snapshot{
-		Cpu:    snap.CPU,
-		Memory: snap.Memory,
+		AgentId: s.id,
+		Cpu:     snap.CPU,
+		Memory:  snap.Memory,
 	})
 	return err
 }

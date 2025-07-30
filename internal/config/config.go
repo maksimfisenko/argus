@@ -12,6 +12,7 @@ type Config struct {
 	LogLevel      string        `yaml:"log_level"`
 	LogFile       string        `yaml:"log_file"`
 	ServerAddress string        `yaml:"server_address"`
+	AgentID       string        `yaml:"agent_id"`
 }
 
 func LoadConfig(path string) (*Config, error) {

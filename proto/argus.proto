@@ -5,8 +5,9 @@ package argus;
 option go_package = "github.com/maksimfisenko/argus/proto";
 
 message Snapshot {
-    double cpu = 1;
-    double memory = 2;
+    string agent_id = 1;
+    double cpu = 2;
+    double memory = 3;
 }
 
 message Ack {

@@ -10,7 +10,7 @@ import (
 )
 
 func Run(cfg *config.Config) error {
-	sender, err := NewSender(cfg.ServerAddress)
+	sender, err := NewSender(cfg.ServerAddress, cfg.AgentID)
 	if err != nil {
 		return err
 	}

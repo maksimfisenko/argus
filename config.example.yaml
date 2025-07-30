@@ -2,3 +2,4 @@ interval: 10s
 log_level: info
 log_file: stdout
 server_address: :50051
+agent_id: agent-0001s

@@ -16,7 +16,7 @@ func NewServer() *Server {
 }
 
 func (s *Server) SendSnapshot(ctx context.Context, req *pb.Snapshot) (*pb.Ack, error) {
-	log.Printf("Received snapshot: CPU=%.2f%%, Memory=%.2f%%", req.Cpu, req.Memory)
+	log.Printf("received snapshot from '%s': CPU=%.2f%%, MEM=%.2f%%", req.AgentId, req.Cpu, req.Memory)
 
 	return &pb.Ack{
 		Message: "ok",
