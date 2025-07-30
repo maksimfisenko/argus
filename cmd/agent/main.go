@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
 	"os"
 	"time"
 
 	"github.com/maksimfisenko/argus/internal/config"
 	"github.com/maksimfisenko/argus/internal/metrics"
+	"github.com/maksimfisenko/argus/proto"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
@@ -31,10 +35,18 @@ func main() {
 		defer file.Close()
 	}
 
+	conn, err := grpc.NewClient(":50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		logrus.Fatalf("failed to connect to the server: %v", err)
+	}
+	defer conn.Close()
+
+	client := proto.NewArgusServiceClient(conn)
+
 	ticker := time.NewTicker(10 * time.Second)
 	defer ticker.Stop()
 
-	logrus.Infof("agent started with interval %s", cfg.Interval)
+	logrus.Infof("agent started with interval %s, sending metrics to ':50051'", cfg.Interval)
 
 	for {
 		<-ticker.C
@@ -43,6 +55,21 @@ func main() {
 		if err != nil {
 			logrus.WithError(err).Error("failed to collect metrics")
 		}
-		logrus.Infof("CPU: %.2f%%, RAM: %.2f%%", snap.CPU, snap.Memory)
+
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+
+		resp, err := client.SendSnapshot(ctx, &proto.Snapshot{
+			Cpu:    snap.CPU,
+			Memory: snap.Memory,
+		})
+
+		cancel()
+
+		if err != nil {
+			logrus.WithError(err).Error("failed to send snapshot")
+			continue
+		}
+
+		logrus.Infof("metrics sent successfully, server response: %s", resp.Message)
 	}
 }
