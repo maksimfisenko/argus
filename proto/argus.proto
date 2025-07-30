@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package argus;
+
+option go_package = "github.com/maksimfisenko/argus/proto";
+
+message Snapshot {
+    double cpu = 1;
+    double memory = 2;
+}
+
+message Ack {
+    string message = 1;
+}
+
+service ArgusService {
+    rpc SendSnapshot(Snapshot) returns (Ack);
+}
