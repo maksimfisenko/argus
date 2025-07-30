@@ -8,9 +8,10 @@ import (
 )
 
 type Config struct {
-	Interval time.Duration `yaml:"interval"`
-	LogLevel string        `yaml:"log_level"`
-	LogFile  string        `yaml:"log_file"`
+	Interval      time.Duration `yaml:"interval"`
+	LogLevel      string        `yaml:"log_level"`
+	LogFile       string        `yaml:"log_file"`
+	ServerAddress string        `yaml:"server_address"`
 }
 
 func LoadConfig(path string) (*Config, error) {
