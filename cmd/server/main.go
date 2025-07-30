@@ -4,6 +4,7 @@ import (
 	"log"
 	"net"
 
+	"github.com/maksimfisenko/argus/internal/kafka"
 	"github.com/maksimfisenko/argus/internal/server"
 	"google.golang.org/grpc"
 
@@ -18,7 +19,10 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	srv := server.NewServer()
+	producer := kafka.NewProducer([]string{"localhost:9092"}, "snapshots")
+	defer producer.Close()
+
+	srv := server.NewServer(producer)
 	pb.RegisterArgusServiceServer(grpcServer, srv)
 
 	log.Println("gRPC server listening on :50051")
