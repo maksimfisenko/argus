@@ -39,10 +39,10 @@ func main() {
 	for {
 		<-ticker.C
 
-		cpu, ram, err := metrics.Collect()
+		snap, err := metrics.Collect()
 		if err != nil {
 			logrus.WithError(err).Error("failed to collect metrics")
 		}
-		logrus.Infof("CPU: %.2f%%, RAM: %.2f%%", cpu, ram)
+		logrus.Infof("CPU: %.2f%%, RAM: %.2f%%", snap.CPU, snap.Memory)
 	}
 }

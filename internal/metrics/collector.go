@@ -7,16 +7,40 @@ import (
 	"github.com/shirou/gopsutil/v4/mem"
 )
 
-func Collect() (float64, float64, error) {
+type Snapshot struct {
+	CPU    float64
+	Memory float64
+}
+
+func snapCPU() (float64, error) {
 	cpu, err := cpu.Percent(time.Second, false)
 	if err != nil {
-		return 0, 0, err
+		return 0, err
 	}
+	return cpu[0], nil
+}
 
+func snapMemory() (float64, error) {
 	vm, err := mem.VirtualMemory()
 	if err != nil {
-		return 0, 0, err
+		return 0, err
+	}
+	return vm.UsedPercent, nil
+}
+
+func Collect() (Snapshot, error) {
+	cpu, err := snapCPU()
+	if err != nil {
+		return Snapshot{}, nil
 	}
 
-	return cpu[0], vm.UsedPercent, nil
+	memory, err := snapMemory()
+	if err != nil {
+		return Snapshot{}, nil
+	}
+
+	return Snapshot{
+		CPU:    cpu,
+		Memory: memory,
+	}, nil
 }
