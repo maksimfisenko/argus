@@ -31,12 +31,12 @@ func snapMemory() (float64, error) {
 func Collect() (Snapshot, error) {
 	cpu, err := snapCPU()
 	if err != nil {
-		return Snapshot{}, nil
+		return Snapshot{}, err
 	}
 
 	memory, err := snapMemory()
 	if err != nil {
-		return Snapshot{}, nil
+		return Snapshot{}, err
 	}
 
 	return Snapshot{
