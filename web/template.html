@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="10">
+    <title>Argus Metrics</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: #f0f0f0;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+        }
+
+        tr:not(:last-child) {
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        td {
+            font-size: 0.9rem;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Latest Metrics</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Agent ID</th>
+                <th>CPU (%)</th>
+                <th>Memory (%)</th>
+                <th>Disk Usage (%)</th>
+                <th>Avg Load</th>
+                <th>Uptime (s)</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .}}
+            <tr>
+                <td>{{.AgentID}}</td>
+                <td>{{printf "%.2f" .CPU}}</td>
+                <td>{{printf "%.2f" .Memory}}</td>
+                <td>{{printf "%.2f" .DiskUsage}}</td>
+                <td>{{printf "%.2f" .AvgLoad}}</td>
+                <td>{{.Uptime}}</td>
+                <td>{{.CreatedAt.Format "15:04:05 02.01.2006"}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</body>
+</html>
