@@ -31,6 +31,6 @@ func main() {
 			continue
 		}
 
-		log.Printf("received snapshot from %s: CPU=%.2f, Memory=%.2f", snap.AgentId, snap.Cpu, snap.Memory)
+		log.Printf("%s: CPU=%.2f, MEM=%.2f, DISK=%.2f", snap.AgentId, snap.Cpu, snap.Memory, snap.DiskUsage)
 	}
 }

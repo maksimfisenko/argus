@@ -26,6 +26,9 @@ type Snapshot struct {
 	AgentId       string                 `protobuf:"bytes,1,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
 	Cpu           float64                `protobuf:"fixed64,2,opt,name=cpu,proto3" json:"cpu,omitempty"`
 	Memory        float64                `protobuf:"fixed64,3,opt,name=memory,proto3" json:"memory,omitempty"`
+	DiskUsage     float64                `protobuf:"fixed64,4,opt,name=disk_usage,json=diskUsage,proto3" json:"disk_usage,omitempty"`
+	AvgLoad       float64                `protobuf:"fixed64,5,opt,name=avg_load,json=avgLoad,proto3" json:"avg_load,omitempty"`
+	Uptime        uint64                 `protobuf:"varint,6,opt,name=uptime,proto3" json:"uptime,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -81,6 +84,27 @@ func (x *Snapshot) GetMemory() float64 {
 	return 0
 }
 
+func (x *Snapshot) GetDiskUsage() float64 {
+	if x != nil {
+		return x.DiskUsage
+	}
+	return 0
+}
+
+func (x *Snapshot) GetAvgLoad() float64 {
+	if x != nil {
+		return x.AvgLoad
+	}
+	return 0
+}
+
+func (x *Snapshot) GetUptime() uint64 {
+	if x != nil {
+		return x.Uptime
+	}
+	return 0
+}
+
 type Ack struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
@@ -129,11 +153,15 @@ var File_proto_argus_proto protoreflect.FileDescriptor
 
 const file_proto_argus_proto_rawDesc = "" +
 	"\n" +
-	"\x11proto/argus.proto\x12\x05argus\"O\n" +
+	"\x11proto/argus.proto\x12\x05argus\"\xa1\x01\n" +
 	"\bSnapshot\x12\x19\n" +
 	"\bagent_id\x18\x01 \x01(\tR\aagentId\x12\x10\n" +
 	"\x03cpu\x18\x02 \x01(\x01R\x03cpu\x12\x16\n" +
-	"\x06memory\x18\x03 \x01(\x01R\x06memory\"\x1f\n" +
+	"\x06memory\x18\x03 \x01(\x01R\x06memory\x12\x1d\n" +
+	"\n" +
+	"disk_usage\x18\x04 \x01(\x01R\tdiskUsage\x12\x19\n" +
+	"\bavg_load\x18\x05 \x01(\x01R\aavgLoad\x12\x16\n" +
+	"\x06uptime\x18\x06 \x01(\x04R\x06uptime\"\x1f\n" +
 	"\x03Ack\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage2;\n" +
 	"\fArgusService\x12+\n" +

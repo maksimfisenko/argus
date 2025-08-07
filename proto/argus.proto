@@ -8,6 +8,9 @@ message Snapshot {
     string agent_id = 1;
     double cpu = 2;
     double memory = 3;
+    double disk_usage = 4;
+    double avg_load = 5;
+    uint64 uptime = 6;
 }
 
 message Ack {
