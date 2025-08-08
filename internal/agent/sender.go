@@ -15,8 +15,8 @@ type Sender struct {
 	client proto.ArgusServiceClient
 }
 
-func NewSender(address, id string) (*Sender, error) {
-	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+func NewSender(serverAddress, id string) (*Sender, error) {
+	conn, err := grpc.NewClient(serverAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}
@@ -32,9 +32,12 @@ func (s *Sender) Close() {
 
 func (s *Sender) SendSnaphot(ctx context.Context, snap metrics.Snapshot) error {
 	_, err := s.client.SendSnapshot(ctx, &proto.Snapshot{
-		AgentId: s.id,
-		Cpu:     snap.CPU,
-		Memory:  snap.Memory,
+		AgentId:   s.id,
+		Cpu:       snap.CPU,
+		Memory:    snap.Memory,
+		DiskUsage: snap.DiskUsage,
+		AvgLoad:   snap.AvgLoad,
+		Uptime:    snap.Uptime,
 	})
 	return err
 }

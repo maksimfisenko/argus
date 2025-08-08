@@ -1,0 +1,6 @@
+log_level: "info"
+kafka_brokers:
+  - "localhost:9092"
+kafka_topic: "snapshots"
+kafka_group_id: "argus-consumer-group"
+db_path: "./data/argus.db"

@@ -2,6 +2,7 @@ package agent
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/maksimfisenko/argus/internal/config"
@@ -9,24 +10,24 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func Run(cfg *config.Config) error {
-	sender, err := NewSender(cfg.ServerAddress, cfg.AgentID)
+func Run(cfg *config.Agent) error {
+	sender, err := NewSender(cfg.ServerAddress, cfg.ID)
 	if err != nil {
-		return err
+		return errors.New("failed to set up new sender")
 	}
 	defer sender.Close()
 
-	ticker := time.NewTicker(10 * time.Second)
+	ticker := time.NewTicker(time.Duration(cfg.Interval) * time.Second)
 	defer ticker.Stop()
 
-	logrus.Infof("agent started with interval %s, sending metrics to '%s'", cfg.Interval, cfg.ServerAddress)
+	logrus.Infof("The agent is up [id='%s', server='%s', interval='%d seconds']", cfg.ID, cfg.ServerAddress, cfg.Interval)
 
 	for {
 		<-ticker.C
 
 		snap, err := metrics.Collect()
 		if err != nil {
-			logrus.WithError(err).Error("failed to collect metrics")
+			logrus.Error("Failed to collect metrics")
 			continue
 		}
 
@@ -35,8 +36,10 @@ func Run(cfg *config.Config) error {
 		cancel()
 
 		if err != nil {
-			logrus.WithError(err).Error("failed to send snapshot")
+			logrus.Error("Failed to send snapshot")
 			continue
 		}
+
+		logrus.Info("Successfully sent snapshot")
 	}
 }

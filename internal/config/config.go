@@ -1,33 +1,43 @@
 package config
 
 import (
+	"fmt"
 	"os"
-	"time"
 
 	"gopkg.in/yaml.v3"
 )
 
-type Config struct {
-	Interval      time.Duration `yaml:"interval"`
-	LogLevel      string        `yaml:"log_level"`
-	LogFile       string        `yaml:"log_file"`
-	ServerAddress string        `yaml:"server_address"`
-	AgentID       string        `yaml:"agent_id"`
+type Agent struct {
+	ID            string `yaml:"id"`
+	LogLevel      string `yaml:"log_level"`
+	ServerAddress string `yaml:"server_address"`
+	Interval      int    `yaml:"interval"`
 }
 
-func LoadConfig(path string) (*Config, error) {
-	file, err := os.Open(path)
+type Server struct {
+	Address      string   `yaml:"address"`
+	LogLevel     string   `yaml:"log_level"`
+	KafkaBrokers []string `yaml:"kafka_brokers"`
+	KafkaTopic   string   `yaml:"kafka_topic"`
+}
+
+type Consumer struct {
+	LogLevel     string   `yaml:"log_level"`
+	KafkaBrokers []string `yaml:"kafka_brokers"`
+	KafkaTopic   string   `yaml:"kafka_topic"`
+	KafkaGroupID string   `yaml:"kafka_group_id"`
+	DbPath       string   `yaml:"db_path"`
+}
+
+func Load(path string, out any) error {
+	data, err := os.ReadFile(path)
 	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	var cfg Config
-
-	decoder := yaml.NewDecoder(file)
-	if err := decoder.Decode(&cfg); err != nil {
-		return nil, err
+		return fmt.Errorf("failed to read config: %w", err)
 	}
 
-	return &cfg, err
+	if err := yaml.Unmarshal(data, out); err != nil {
+		return fmt.Errorf("failed to unmarshal config: %w", err)
+	}
+
+	return nil
 }

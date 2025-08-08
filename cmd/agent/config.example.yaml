@@ -1,0 +1,4 @@
+id: "agent-001"
+log_level: "info"
+server_address: "localhost:50051"
+interval: 5

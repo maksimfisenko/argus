@@ -1,32 +1,23 @@
 package main
 
 import (
-	"log"
-	"net"
-
-	"github.com/maksimfisenko/argus/internal/kafka"
+	"github.com/maksimfisenko/argus/internal/config"
+	"github.com/maksimfisenko/argus/internal/logger"
 	"github.com/maksimfisenko/argus/internal/server"
-	"google.golang.org/grpc"
-
-	pb "github.com/maksimfisenko/argus/proto"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	lis, err := net.Listen("tcp", ":50051")
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+	var cfg config.Server
+	if err := config.Load("./cmd/server/config.yaml", &cfg); err != nil {
+		logrus.Fatalf("Failed to load config: %v", err)
 	}
 
-	grpcServer := grpc.NewServer()
+	if err := logger.Init(cfg.LogLevel); err != nil {
+		logrus.Fatalf("Failed to init logger: %v", err)
+	}
 
-	producer := kafka.NewProducer([]string{"localhost:9092"}, "snapshots")
-	defer producer.Close()
-
-	srv := server.NewServer(producer)
-	pb.RegisterArgusServiceServer(grpcServer, srv)
-
-	log.Println("gRPC server listening on :50051")
-	if err := grpcServer.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+	if err := server.Run(&cfg); err != nil {
+		logrus.Fatalf("Server exited with error: %v", err)
 	}
 }

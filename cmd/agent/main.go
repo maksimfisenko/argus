@@ -8,16 +8,16 @@ import (
 )
 
 func main() {
-	cfg, err := config.LoadConfig("config.yaml")
-	if err != nil {
-		logrus.Fatalf("failed to load config: %v", err)
+	var cfg config.Agent
+	if err := config.Load("./cmd/agent/config.yaml", &cfg); err != nil {
+		logrus.Fatalf("Failed to load config: %v", err)
 	}
 
-	if err := logger.Init(cfg.LogLevel, cfg.LogFile); err != nil {
-		logrus.Fatalf("failed to init logger: %v", err)
+	if err := logger.Init(cfg.LogLevel); err != nil {
+		logrus.Fatalf("Failed to init logger: %v", err)
 	}
 
-	if err := agent.Run(cfg); err != nil {
-		logrus.Fatalf("agent exited with error: %v", err)
+	if err := agent.Run(&cfg); err != nil {
+		logrus.Fatalf("Agent exited with error: %v", err)
 	}
 }
