@@ -11,7 +11,7 @@ import (
 
 func main() {
 	var cfg config.Consumer
-	if err := config.Load("./cmd/consumer/config.yaml", &cfg); err != nil {
+	if err := config.Load("cmd/consumer/config.yaml", &cfg); err != nil {
 		logrus.Fatalf("Failed to load config: %v", err)
 	}
 

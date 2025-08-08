@@ -9,7 +9,7 @@ import (
 
 func main() {
 	var cfg config.Agent
-	if err := config.Load("./cmd/agent/config.yaml", &cfg); err != nil {
+	if err := config.Load("cmd/agent/config.yaml", &cfg); err != nil {
 		logrus.Fatalf("Failed to load config: %v", err)
 	}
 
